@@ -1,0 +1,32 @@
+{
+    "id_piece" : 7,
+    "id_pieces-visitables":[
+        { "id_pieces" : 9 },
+        { "id_pieces" : 5 },
+        { "id_pieces" : 42 }
+    ]
+}
+
+
+{
+    "id_piece" : 7,
+    "id_pieces-visitables":[9, 5, 42],  //portes
+    "id_monstre":89
+}
+GET /monstre/89
+{
+    "id_monstre" : 89,
+    "nom_monstre": "Gobelin",
+    "pdd_monstre":50
+}
+
+
+
+{
+    "id_piece" : 7,
+    "id_pieces-visitables":[9, 5, 42],  //portes
+    "monstre":{
+        "id_monstre":89,
+        "pdd_monstre": 50
+    }
+}
