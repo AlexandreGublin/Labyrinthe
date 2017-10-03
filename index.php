@@ -7,29 +7,42 @@ require('flight/Flight.php');
 Flight::route('/', function(){
     echo 'hello world!';
 });
-
-
 // créer une nouvelle route
 Flight::route('/ping', function(){
     echo "pong";
 });
 
 Flight::route('GET /donjons', function(){
-    // $oMyDonjon = new Donjon(1);
-
-    // $oMyDonjon->setNomDonjon('Mon premier donjon');
-
-    // $sNomDonjon = $oMyDonjon->getNomDonjon();
-    
-    // echo $sNomDonjon."<br>";
-
     $sListeDonjons = Donjon::all();
 
-    foreach($sListeDonjons as $oDonjon){
-        echo $oDonjon->getNomDonjon();
-    }
-
+    // foreach($sListeDonjons as $oDonjon){
+    //     Flight::json(
+    //         array(
+    //             "id_donjon" => $oDonjon->getIdDonjon(),
+    //             "nom_donjon" => $oDonjon->getNomDonjon()
+    //         )
+    //     );
+    // }
 });
+
+Flight::route('PUT /donjon/@nom_donjon', function($sNomDonjon){
+    
+        // vérifier l'existence de l'objet
+        if(!isset($sNomDonjon)) Flight::halt(406, "Il manque le nom du donjon");
+    
+        // Instancier l'objet
+        $oDonjon = Donjon::creer($sNomDonjon);
+    
+        Flight::json(
+            array(
+                "id_donjon" => $oDonjon->getIdDonjon(),
+                "nom_donjon" => $oDonjon->getNomDonjon()
+            )
+        );
+        
+});
+
+    
 
 
 Flight::route('GET /personnages', function(){
@@ -40,9 +53,7 @@ Flight::route('GET /personnages', function(){
         }
 
 });
-Flight::route('POST /personnage', function(){
-    $sNomPersonnage = Flight::request()->data->nom_personnage;
-    $iPddPersonnage = Flight::request()->data->pdd_personnage;
+Flight::route('PUT /perso/@nom_perso/@pdv_perso', function($sNomPersonnage, $iPddPersonnage){
 
     // vérifier l'existence de l'objet
     if(!isset($sNomPersonnage)) Flight::halt(406, "Il manque le nom du personnage");
@@ -52,40 +63,13 @@ Flight::route('POST /personnage', function(){
 
     Flight::json(
         array(
-            "id_personnage" =>
-                $oPersonnage->getIdPersonnage()
+            "id_personnage" => $oPersonnage->getIdPersonnage(),
+            "nom_personnage" => $oPersonnage->getNomPersonnage(),
+            "pdd_personnage" => $oPersonnage->getPddPersonnage()
         )
     );
-    
-
     
 });
 
 
-
-
 Flight::start();
-
-
-
-
-
-
-
-
-//  ---------------  Voiture  -----------------
-// déclaration var
-// $iMoteur = 200; 
-// $iNbPassagers = 5;
-// $sActionVoiture = "Avancer";
-
-// //appel objet voiture
-// $oMaVoiture = new Voiture($iMoteur, $iNbPassagers, $sActionVoiture);
-
-// $sMaNouvelleAction = "Freiner";
-// $oMaVoiture->SetActionVoiture($sMaNouvelleAction);
-
-// $sActionEnCour = $oMaVoiture->GetActionVoiture();
-
-//  var_dump($sActionEnCour);
-

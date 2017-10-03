@@ -52,7 +52,25 @@ class Personnage extends LabyrintheDefaut{
         return $aPersonnage;
     }
 
-     /**
+    /**
+    *   @param string $sNomPersonnage 
+    *   @param int $iPdd_personnage
+    *   @constructor
+    */
+    public static function creer ($sNomPersonnage, $iPdd_personnage){ 
+        $oConnexion = self::getConnexion();
+
+        $sRequete = "INSERT INTO personnage (nom_personnage, pdd_personnage) VALUES ('". $sNomPersonnage ."', ". $iPdd_personnage .")";        
+
+        $oResult = $oConnexion->query($sRequete);  
+
+        $oPersonnage = new Personnage($oConnexion->lastInsertId());
+        
+        return $oPersonnage;
+    
+    }
+
+    /**
     *   Retourne l'id du personnage
     *   @return string Id du personnage 
     */
@@ -89,25 +107,6 @@ class Personnage extends LabyrintheDefaut{
         $sRequete = "UPDATE personnage SET pdd_personnage = '". $iPdd_personnage ."' WHERE id_personnage = ".$this->_iIdPersonnage;
         $oConnexion->exec($sRequete);
         $this->_iPdd_personnage = $iPdd_personnage;
-    }
-
-
-    /**
-    *   @param string $sNomPersonnage 
-    *   @param int $iPdd_personnage
-    *   @constructor
-    */
-    public static function creer ($sNomPersonnage, $iPdd_personnage){ 
-        $oConnexion = self::getConnexion();
-
-        $sRequete = "INSERT INTO personnage (nom_personnage, pdd_personnage) VALUES ('". $sNomPersonnage ."', ". $iPdd_personnage .")";        
-
-        $oResult = $oConnexion->query($sRequete);  
-
-        $oPersonnage = new Personnage($oConnexion->lastInsertId());
-        
-        return $oPersonnage;
-    
     }
 
 }

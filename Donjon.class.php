@@ -45,11 +45,36 @@ class Donjon extends LabyrintheDefaut{
     }
 
     /**
+    *   @param string $sNomDonjon 
+    *   @constructor
+    */
+    public static function creer ($sNomDonjon){ 
+        $oConnexion = self::getConnexion();
+
+        $sRequete = "INSERT INTO donjon (nom_donjon) VALUES ('". $sNomDonjon ."')";        
+
+        $oResult = $oConnexion->query($sRequete);  
+
+        $oDonjon = new Donjon($oConnexion->lastInsertId());
+        
+        return $oDonjon;
+    
+    }
+
+    /**
+    *   Retourne le nom du donjon
+    *   @return string Nom du donjon 
+    */
+    public function getIdDonjon(){
+        return $this->_iIdDonjon;
+    }
+
+    /**
     *   Retourne le nom du donjon
     *   @return string Nom du donjon 
     */
     public function getNomDonjon(){
-        return "Mon Donjon s'appelle ".$this->_sNomDonjon;
+        return $this->_sNomDonjon;
     }
 
     /**
