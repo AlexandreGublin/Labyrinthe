@@ -57,10 +57,10 @@ class Personnage extends LabyrintheDefaut{
     *   @param int $iPdd_personnage
     *   @constructor
     */
-    public static function creer ($sNomPersonnage, $iPdd_personnage){ 
+    public static function creer ($sNomPersonnage){ 
         $oConnexion = self::getConnexion();
 
-        $sRequete = "INSERT INTO personnage (nom_personnage, pdd_personnage) VALUES ('". $sNomPersonnage ."', ". $iPdd_personnage .")";        
+        $sRequete = "INSERT INTO personnage (nom_personnage, pdd_personnage) VALUES ('". $sNomPersonnage ."', 100)";        
 
         $oResult = $oConnexion->query($sRequete);  
 
@@ -72,7 +72,7 @@ class Personnage extends LabyrintheDefaut{
 
     /**
     *   Retourne l'id du personnage
-    *   @return string Id du personnage 
+    *   @return int Id du personnage 
     */
     public function getIdPersonnage(){
         return $this->_iIdPersonnage;
@@ -87,7 +87,7 @@ class Personnage extends LabyrintheDefaut{
     }
 
     public function setNomPersonnage($sNomPersonnage){
-
+        $oConnexion = self::getConnexion();
         $sRequete = "UPDATE personnage SET nom_personnage = '". $sNomPersonnage ."' WHERE id_personnage = ".$this->_iIdPersonnage;
         $oConnexion->exec($sRequete);
         $this->_sNomPersonnage = $sNomPersonnage;

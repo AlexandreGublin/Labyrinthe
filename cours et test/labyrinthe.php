@@ -23,12 +23,30 @@ PUT     perso / entree   (id_perso, id_donjon) -- id_piece_en_cour
 
 
 
+
+
+
+Message erreurs :
+
+500 : erreur serveur 
+
+400 : impossible d accéder à la ressource
+
+300 : redirection
+
+200 : retourner tout ou une partie de la ressource demandé
+
+
+
+
+
+
         -------------------------------------------------
 
 Utiliser post pour les actions utilisateurs :
 
 // Créer personnage
-PUT     /perso  
+PUT     /perso/@nom_perso/@pdv_perso                                   OK
 sortie ->
 {
         "id_personnage"
@@ -37,15 +55,15 @@ sortie ->
 }
 
 // Placer un perso dans un donjon
-POST    /perso/@id_perso/donjon/@id_donjon
+POST    /perso/@id_perso/donjon/@id_donjon                              OK
 sortie ->
 {
         "id_piece":56,
         "id_pieces_possibles":[89,45,87]
 }
 
-//le joueur rentre dans une pièce (vérifier la possibilité)
-POST    personnage/@id_personnage/piece/@id_piece
+//le joueur rentre dans une pièce (vérifier la possibilité)             
+POST    personnage/@id_personnage/piece/@id_piece                       OK
 entre ->
 {
         "id_piece_precedente":[]
@@ -69,8 +87,8 @@ sortie -> Pièce monstre et / ou coffre
         "id_coffre":987
 }
 
-// si l'utilisateur ouvre un coffre
-POST    /perso/@id_perso/piece/@id_piece/coffre/@id_coffre/ouvrir
+// si l'utilisateur ouvre un coffre                                     
+POST    /perso/@id_perso/piece/@id_piece/coffre/@id_coffre/ouvrir       OK
 sortie ->
 {
         "id_coffre":987,
@@ -82,7 +100,7 @@ sortie ->
 }
 
 //donne des infos sur le coffre
-GET    /perso/@id_perso/piece/@id_piece/coffre/@id_coffre/ouvrir
+GET    /perso/@id_perso/piece/@id_piece/coffre/@id_coffre/ouvrir        OK
 sortie ->
 {
         "id_coffre":987,
@@ -101,7 +119,7 @@ sortie ->
 }
 
 // si l'utilisateur décide de fuir
-POST    /perso/@id_perso/piece/@id_piece/monstre/@id_monstre/combattre
+POST    /perso/@id_perso/piece/@id_piece/monstre/@id_monstre/fuir
 entree ->
 {
         "id_piece_precedente":98
