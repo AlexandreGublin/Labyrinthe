@@ -5,28 +5,30 @@ require_once("LabyrintheDefaut.class.php");
 class Coffre extends LabyrintheDefaut{
 
     /**
-    * @var int 
+    * @var int
     * @private
     */
     private $_iIdCoffre;
 
     /**
-    * @var int 
+    * @var int
     * @private
     */
     private $_iPiegeCoffre;
 
-    // /**
-    // * @var string 
-    // * @private
-    // */
-    // private $_sTresorCoffre;
+    /**
+    * @var string
+    * @private
+    */
+    private $_sTresorCoffre = [
+
+    ];
 
     /**
-    *   @param int $iIdCoffre 
+    *   @param int $iIdCoffre
     *   @constructor
     */
-    public function __construct($iIdCoffre){ 
+    public function __construct($iIdCoffre){
         $oConnexion = self::getConnexion();
         $sCoffre = "SELECT * FROM personnage WHERE id_personnage = ".$iIdCoffre;
         $oResult = $oConnexion->query($sCoffre);
@@ -35,7 +37,7 @@ class Coffre extends LabyrintheDefaut{
 
         $this->_iIdCoffre = $iIdCoffre;
         $this->_iPiegeCoffre = $aCoffre["piege_coffre"];
-        $this->_sTresorCoffre = $aCoffre["tresor_coffre"];                          
+        $this->_sTresorCoffre = $aCoffre["tresor_coffre"];
     }
 
 
@@ -48,31 +50,31 @@ class Coffre extends LabyrintheDefaut{
         foreach($oResult as $aRow){
             $aCoffres[] = new Coffre($aRow['id_coffre']);
         }
-        
+
         return $aCoffres;
     }
 
     // /**
-    // *   @param string $sNomPersonnage 
+    // *   @param string $sNomPersonnage
     // *   @param int $iPdd_personnage
     // *   @constructor
     // */
-    // public static function creer ($sNomPersonnage, $iPdd_personnage){ 
+    // public static function creer ($sNomPersonnage, $iPdd_personnage){
     //     $oConnexion = self::getConnexion();
 
-    //     $sRequete = "INSERT INTO personnage (nom_personnage, pdd_personnage) VALUES ('". $sNomPersonnage ."', ". $iPdd_personnage .")";        
+    //     $sRequete = "INSERT INTO personnage (nom_personnage, pdd_personnage) VALUES ('". $sNomPersonnage ."', ". $iPdd_personnage .")";
 
-    //     $oResult = $oConnexion->query($sRequete);  
+    //     $oResult = $oConnexion->query($sRequete);
 
     //     $oPersonnage = new Personnage($oConnexion->lastInsertId());
-        
+
     //     return $oPersonnage;
-    
+
     // }
 
     /**
     *   Retourne l'id du coffre
-    *   @return int Id du coffre 
+    *   @return int Id du coffre
     */
     public function getIdCoffre(){
         return $this->_iIdCoffre;

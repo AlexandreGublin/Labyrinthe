@@ -1,4 +1,4 @@
-<?php 
+<?php
 require_once("donjon.class.php");
 require_once("personnage.class.php");
 require('flight/Flight.php');
@@ -15,7 +15,9 @@ Flight::route('GET /donjons', function(){
 });
 // Créer un nouveau donjon
 Flight::route('PUT /donjon/@nom_donjon', function($sNomDonjon){
-    
+
+  //body data
+
     // vérifier l'existence de l'objet
     if(!isset($sNomDonjon)) Flight::halt(406, "Il manque le nom du donjon");
 
@@ -28,7 +30,7 @@ Flight::route('PUT /donjon/@nom_donjon', function($sNomDonjon){
             "nom_donjon" => $oDonjon->getNomDonjon()
         )
     );
-        
+
 });
 
 
@@ -36,29 +38,27 @@ Flight::route('PUT /donjon/@nom_donjon', function($sNomDonjon){
 
 // Mettre un personnage dans un donjon
 Flight::route('POST /personnage/@id_perso/donjon/@id_donjon', function($iIdPersonnage, $iIdDonjon){
-        
+
         // savoir si le donjon existe et l'initialisé
         $oDonjon = new Donjon($iIdDonjon);
 
         // créer le parcours
-        $aResult = $oDonjon->entrer($iIdPersonnage, $iIdDonjon);
-
+        $aResult = $oDonjon->entrer($iIdPersonnage);
 
         // renvoyer la pièce d'entrée du donjon et les sortie possible :
-        // Allez insérer dans parcours que l'on est dans une piece et chercher dans plan
-        // les 3 sortie de notre pièce (le plan dois être entierement préparé avant)
         Flight::json(
-            array(
-            "id_piece" => $aResult["id_piece"],
-            "id_pieces_possibles" => array(1)
-        ));
+            $aResult
+        );
 });
 
 
 
-
 //le joueur rentre dans une pièce (vérifier la possibilité)
-Flight::route('POST /personnage/@id_personnage/piece/@id_piece', function($iIdPersonnage, $iIdPiecesPrecedentes){
+Flight::route('POST /personnage/@id_personnage/piece/@id_piece', function($iIdPersonnage, $iIdPiece){
+
+  // $oPersonnage = new personnage($iIdPersonnage);
+  // $iIdPieceActuelle = $oPersonnage->verifPiece($iIdPersonnage);
+  // $aIdPiecesPossibles = $oPersonnage->piecesPossibles($iIdPieceActuelle);
 
     // //contenu
     // $iIdPiecesPrecedentes = Flight::request()->data->id_piece_precedente;
@@ -67,14 +67,14 @@ Flight::route('POST /personnage/@id_personnage/piece/@id_piece', function($iIdPe
     FLIGHT::json(array(
         "id_piece" => 72,
         "id_pieces_possibles" => [89,45,87],
-        "id_piece_precedente" => 56  
+        "id_piece_precedente" => 56
     ));
 
     // si monstre et / ou coffre
     FLIGHT::json(array(
         "id_piece" => 72,
         "id_pieces_possibles" => [89,45,87],
-        "id_piece_precedente" => 56,        
+        "id_piece_precedente" => 56,
         "monstre" => [
                 "id_monstre" => 743,
                 "nom_monstre" => "Lutin démoniaque",
@@ -87,22 +87,39 @@ Flight::route('POST /personnage/@id_personnage/piece/@id_piece', function($iIdPe
 
 
 // si l'utilisateur décide de combattre un monstre
-Flight::route('POST /personnage/@id_perso/piece/@id_piece/monstre/@id_monstre/combattre', 
+/**
+*   @param int $iIdPersonnage   Id du personnage
+*   @param int $iIdPiece  Id de la piece
+*   @param int $iIdMonstre Id du monstre
+*/
+Flight::route('POST /personnage/@id_perso/piece/@id_piece/monstre/@id_monstre/combattre',
     function($iIdPersonnage, $iIdPiece, $iIdMonstre){
-   
+
+    $oPersonnage = new Personnage($iIdPersonnage);
+    $oPiece = new Piece($iIdPiece);
+
     // monstre existant dans la piece oui/non
+    if($oPiece->iIsMonsterHere()){
 
-    // monstre déja combattu oui/non
+      // monstre déja combattu oui/non
+      if($oPiece->isMonsterDead()){
 
-    //combattre
+          //combattre
+          $oPersonnage->combattre(){
 
-    //resultat de la route
-    FLIGHT::json(array(
-        "pdv_perso" => 80  // 0 si il a perdu
-    ));
+          }
+
+          //resultat de la route
+          FLIGHT::json(array(
+              "pdv_perso" => 80  // 0 si il a perdu
+          ));
+
+      }
+
+    }
 });
 // si l'utilisateur décide de fuir
-Flight::route('POST /personnage/@id_perso/piece/@id_piece/monstre/@id_monstre/fuir', 
+Flight::route('POST /personnage/@id_perso/piece/@id_piece/monstre/@id_monstre/fuir',
     function($iIdPersonnage, $iIdPiece, $iIdMonstre){
 
     // //contenu
@@ -118,9 +135,9 @@ Flight::route('POST /personnage/@id_perso/piece/@id_piece/monstre/@id_monstre/fu
 
 
 // Lorsque le perso ouvre un coffre
-Flight::route('POST /personnage/@id_perso/piece/@id_piece/coffre/@id_coffre/ouvrir', 
+Flight::route('POST /personnage/@id_perso/piece/@id_piece/coffre/@id_coffre/ouvrir',
     function($iIdPersonnage, $iIdPiece, $iIdCoffre){
-    
+
     // vérifier si un coffre (id_coffre) existe dans la piece
 
     // vérifier si le coffre a déja été ouvert
@@ -138,7 +155,7 @@ Flight::route('POST /personnage/@id_perso/piece/@id_piece/coffre/@id_coffre/ouvr
     ));
 });
 //donne des infos sur le coffre
-Flight::route('GET /personnage/@id_perso/piece/@id_piece/coffre/@id_coffre/ouvrir', 
+Flight::route('GET /personnage/@id_perso/piece/@id_piece/coffre/@id_coffre/ouvrir',
     function($iIdPersonnage, $iIdPiece, $iIdCoffre){
 
     // coffre existant oui non
@@ -158,7 +175,7 @@ Flight::route('GET /personnage/@id_perso/piece/@id_piece/coffre/@id_coffre/ouvri
 // Renvoie tous les personnages
 Flight::route('GET /personnages', function(){
     $sPersonnages = Personnage::all();
-    
+
     $aListePersonnages = [];
     $aListePersonnages2 = [];
     $i = 0;
@@ -175,10 +192,12 @@ Flight::route('GET /personnages', function(){
         $i++;
     }
 
-    echo json_encode($aListePersonnages);  
+    Flight::json(
+      $aListePersonnages
+    );
     //resultat de la route
     // FLIGHT::json(array(
-        
+
     // ));
     // }
 
@@ -199,7 +218,7 @@ Flight::route('PUT /personnage/@nom_perso', function($sNomPersonnage){
             "pdd_personnage" => $oPersonnage->getPddPersonnage()
         )
     );
-    
+
 });
 
 
